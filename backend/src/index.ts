@@ -14,7 +14,7 @@ const app = new Hono<{
     password:string
   }
 }>();
-app.use(cors())
+app.use(cors());
 app.route('/api/v1/user',userRouter);
 app.route('/api/v1', postRouter);
 export default app;
