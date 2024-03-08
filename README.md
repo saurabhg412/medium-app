@@ -5,32 +5,19 @@ A user-friendly and customizable Posting platform built with [technologies].
 ## Features
 
 * Intuitive interface for writing and editing blog posts
-* Robust search functionality
-* Categorization and tagging for content organization
-* [Add more of your site's features]
+* search functionality
 
 ## Technologies Used
 
-* **Frontend:** HTML, CSS, JavaScript, React.js
-* **Backend:** Node.js, Express.js, MongoDB
-* **Other:**  Netlify (deployment)
+* **Frontend:** React.ts , Tailwind
+* **Backend:** Node.js, Hono, Prisma 
+* **Other:**  Cloudflare
 
 ## Getting Started
 
 **Prerequisites**
 * Node.js (version 16 or later)
-* MongoDB 
-
-**Installation**
-*  ... (See instructions above)
-
-## Deployment 
-
-* ... Instructions for deploying to your chosen platform
-
-## How to Contribute
-
-* ... Your contribution guidelines 
+* React (version 18 or above) 
 
 ## License
 
