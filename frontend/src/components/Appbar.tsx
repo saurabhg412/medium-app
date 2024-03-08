@@ -11,10 +11,13 @@ export default function AppBar() {
     <div className="bg-white shadow-md sticky top-0 z-10"> 
       <div className="container mx-auto px-4 flex items-center justify-between py-3">
 
-        <Link to="/post" className="font-bold text-xl">Medium</Link>
+        <Link to="/post" className="font-bold text-xl mr-3">Medium</Link>
 
         {/* Navigation Links */}
-        <ul className="flex items-center space-x-6">
+        <ul className="flex items-center space-x-4">
+          <li>
+            <input type="text" placeholder='Search your posts...' className="border border-gray-300 rounded-md px-3 py-2 w-full"/>
+          </li>
           <li >
             <Link to="/post">Home</Link>
           </li>
