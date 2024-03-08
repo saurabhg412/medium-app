@@ -6,7 +6,7 @@
   "dependencies": {
     "@prisma/client": "^5.10.2",
     "@prisma/extension-accelerate": "^0.6.3",
-    "@saurabh412/index": "^1.0.0",
+    "@saurabh412/index": "^1.0.1",
     "hono": "^4.0.5",
     "prisma": "^5.10.2",
     "zod": "^3.22.4"
