@@ -66,7 +66,7 @@ postRouter.post('/post/create', async (c) => {
       return c.json(post, 201); // 201 Created status code
     } catch (error) {
       console.error("Error creating post:", error);
-      return c.json({ message: 'Error creating post' }, 500); 
+      return c.json({ message: 'Error creating post' }, 400); 
     }
   });
 
@@ -78,7 +78,7 @@ postRouter.post('/post/create', async (c) => {
     const body = await c.req.json()
     const {success} = updatedPostSchema.safeParse(body);
     if(!success){
-     c.json("invalid inputs")
+     return c.json("invalid inputs")
     }
     const userId =  c.get('userId')
     const id = parseInt(c.req.param('id'));

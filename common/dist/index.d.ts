@@ -26,15 +26,12 @@ export declare const signinSchema: z.ZodObject<{
 export type signinSchema = z.infer<typeof signinSchema>;
 export declare const updatedUserSchema: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
-    email: z.ZodOptional<z.ZodString>;
     password: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     name?: string | undefined;
-    email?: string | undefined;
     password?: string | undefined;
 }, {
     name?: string | undefined;
-    email?: string | undefined;
     password?: string | undefined;
 }>;
 export type updatedUserSchema = z.infer<typeof updatedUserSchema>;
