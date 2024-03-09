@@ -16,10 +16,10 @@ exports.updatedUserSchema = zod_1.z.object({
     password: zod_1.z.string().min(6).max(10).optional()
 });
 exports.postSchema = zod_1.z.object({
-    title: zod_1.z.string().min(3).max(50),
-    content: zod_1.z.string().max(2048)
+    title: zod_1.z.string().min(1).max(100),
+    content: zod_1.z.string().min(1).max(2048)
 });
 exports.updatedPostSchema = zod_1.z.object({
-    title: zod_1.z.string().min(3).max(50).optional(),
+    title: zod_1.z.string().max(100).optional(),
     content: zod_1.z.string().max(2048).optional()
 });

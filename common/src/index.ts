@@ -23,14 +23,14 @@ export const updatedUserSchema = z.object({
 export type updatedUserSchema = z.infer<typeof updatedUserSchema>
 
 export const postSchema = z.object({
-    title : z.string().min(3).max(50),
-    content : z.string().max(2048)
+    title : z.string().min(1).max(100),
+    content : z.string().min(1).max(2048)
 })
 
 export type postSchema = z.infer<typeof postSchema>
 
 export const updatedPostSchema = z.object({
-    title : z.string().min(3).max(50).optional(),
+    title : z.string().max(100).optional(),
     content : z.string().max(2048).optional()
 })
 
