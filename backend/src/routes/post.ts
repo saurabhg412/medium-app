@@ -98,7 +98,7 @@ postRouter.post('/post/create', async (c) => {
             content: body.content
         }
       })
-      return c.json({msg:"Updated successfully"}),c.json(updatedPost)
+      return c.json({msg:"Updated successfully"},200),c.json(updatedPost)
     }catch(e){
       console.error("Error updating post:", e);
       return c.json("you are not authenticated:",401)
