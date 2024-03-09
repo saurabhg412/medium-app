@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Context, Hono, Next } from "hono";
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { verify } from "hono/jwt";
@@ -15,8 +15,8 @@ export const postRouter = new Hono<{
     }
 }>()
 
-postRouter.use('/post/*', async (c, next) => {
-    const authHeader = c.req.header('Authorization');
+async function postMiddleware(c:Context,next:Next){
+  const authHeader = c.req.header('Authorization');
     if (!authHeader) {
         return c.json({ message: 'Unauthorized' }, 401);
     }
@@ -34,9 +34,9 @@ postRouter.use('/post/*', async (c, next) => {
         console.log(e)
         return c.text(`${e}, Unauthorized`, 401)
     }
-})
+}
 
-postRouter.post('/post/create', async (c) => {
+postRouter.post('/create',postMiddleware, async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
@@ -70,7 +70,7 @@ postRouter.post('/post/create', async (c) => {
     }
   });
 
-  postRouter.put('/post/update/:id', async (c) =>{
+  postRouter.put('/update/:id',postMiddleware ,async (c) =>{
     const prisma = new PrismaClient({
       datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
@@ -105,7 +105,7 @@ postRouter.post('/post/create', async (c) => {
     }
     })
 
-    postRouter.get('/post/bulk', async(c) =>{
+    postRouter.get('/bulk',postMiddleware ,async(c) =>{
       const prisma = new PrismaClient({
         datasourceUrl: c.env?.DATABASE_URL,
       }).$extends(withAccelerate())
@@ -117,13 +117,14 @@ postRouter.post('/post/create', async (c) => {
           content:true,
           author:{select:{
             name:true,
+            id:true
           }}
           }
       })
       return c.json(post)
     })
   
-postRouter.get('/post/posts', async(c) => {
+postRouter.get('/posts',postMiddleware ,async(c) => {
   const userId =  c.get('userId')
 	const prisma = new PrismaClient({
 		datasourceUrl: c.env?.DATABASE_URL	,
@@ -146,7 +147,7 @@ postRouter.get('/post/posts', async(c) => {
   return c.json(post)
 })
 
-postRouter.get('/post/:id', async(c) => {
+postRouter.get('/:id',postMiddleware ,async(c) => {
   const userId =  c.get('userId')
   const id = parseInt(c.req.param('id'));
 	const prisma = new PrismaClient({
@@ -172,7 +173,7 @@ postRouter.get('/post/:id', async(c) => {
 })
 
 //delete your post
-postRouter.delete('/post/delete/:id',async(c)=>{
+postRouter.delete('/delete/:id',postMiddleware,async(c)=>{
   const userId =  c.get('userId')
   const id = parseInt(c.req.param('id'));
 	const prisma = new PrismaClient({
@@ -203,3 +204,48 @@ postRouter.delete('/post/delete/:id',async(c)=>{
     return c.json({ message: 'Error deleting post' }, 500)
   }
 })
+
+postRouter.get('/posts/:id',postMiddleware,async (c) => {
+  const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL	,
+	}).$extends(withAccelerate());
+  const id = parseInt(c.req.param('id'));
+
+  const post = await prisma.post.findUnique({
+    where: { id},
+    select:{
+      id: true,
+      title:true,
+      content:true,
+      author:{select:{
+        name:true,
+      }}
+    }
+    })
+    return(c.json(post))
+  })
+
+  postRouter.get('/author/:authorId',postMiddleware ,async(c) => {
+    const authorId =  parseInt(c.req.param('authorId'))
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env?.DATABASE_URL	,
+    }).$extends(withAccelerate());
+    
+    const post = await prisma.post.findMany({
+      where: {
+         authorId:authorId
+      },select:{
+        id:true,
+        title:true,
+        content:true,
+        author:{
+          select:{
+            id:true,
+            name:true
+          }
+        }
+      }
+    });
+    return c.json(post)
+  })
+

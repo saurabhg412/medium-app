@@ -16,5 +16,5 @@ const app = new Hono<{
 }>();
 app.use(cors());
 app.route('/api/v1/user',userRouter);
-app.route('/api/v1', postRouter);
+app.route('/api/v1/post', postRouter);
 export default app;
