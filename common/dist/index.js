@@ -13,6 +13,7 @@ exports.signinSchema = zod_1.z.object({
 });
 exports.updatedUserSchema = zod_1.z.object({
     name: zod_1.z.string().min(3).max(15).optional(),
+    email: zod_1.z.string().email().optional(),
     password: zod_1.z.string().min(6).max(10).optional()
 });
 exports.postSchema = zod_1.z.object({

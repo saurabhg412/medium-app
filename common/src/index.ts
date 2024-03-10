@@ -17,6 +17,7 @@ export type signinSchema = z.infer<typeof signinSchema>
 
 export const updatedUserSchema = z.object({
     name : z.string().min(3).max(15).optional(),
+    email : z.string().email().optional(),
     password : z.string().min(6).max(10).optional()
 })
 

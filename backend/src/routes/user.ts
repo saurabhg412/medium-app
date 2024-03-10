@@ -119,22 +119,13 @@ userRouter.post('/signup',async(c)=>{
        }
 
       const userId = parseInt(c.get('userId'));
-      const id = parseInt(c.req.param('id'))
-      console.log(userId);
-      console.log(id);
-      if (userId !== id) {
-        return c.json({ message: "Unauthorized" }, 403);
-      }
+
       try{
         const updatedUser = await prisma.user.update({
           where: {
             id:userId
           },
-          data:{
-            email : body.email,
-            password: body.password,
-            name: body.name,
-          }
+          data:body
         })
         return c.json({msg:"Updated successfully"},500),c.json(updatedUser)
       } catch (e){
