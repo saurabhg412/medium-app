@@ -10,7 +10,7 @@ export const userRouter = new Hono<{
         password:string
     },
     Variables : {
-      userId : string
+      userId : number
     }
 }>();
 
@@ -64,7 +64,7 @@ userRouter.post('/signup',async(c)=>{
     const prisma = new PrismaClient({
       datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
-    const userId = parseInt(c.get('userId'));
+    const userId = c.get('userId');
     const userProfile = await prisma.user.findUnique({
       where:{
         id:userId
@@ -108,44 +108,43 @@ userRouter.post('/signup',async(c)=>{
     return c.json({jwt,user},200)
   })
 
-  userRouter.put('/update/:id',authMiddleware,async (c) => {
-      const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-      }).$extends(withAccelerate())
-      const body = await c.req.json();
-      const {success} = updatedUserSchema.safeParse(body);
-       if(!success){
-        return c.json("invalid inputs")
-       }
-
-      const userId = parseInt(c.get('userId'));
-
-      try{
-        const updatedUser = await prisma.user.update({
-          where: {
-            id:userId
-          },
-          data:body
-        })
-        return c.json({msg:"Updated successfully"},500),c.json(updatedUser)
-      } catch (e){
-        return c.json('Server error')
-      }
-    });
-
     userRouter.delete("/delete/:id",authMiddleware , async (c)=>{
       const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
       }).$extends(withAccelerate())
-      const userId = parseInt(c.get('userId'))
-      console.log(userId)
+      const userId = c.get('userId')
       const user = await prisma.user.findUnique(
         {where:{id:userId}
       })
-      console.log(user)
       if (!user) {
         return c.json("No User Found with this ID")
       }
-      await prisma.user.delete({where:{id:userId}})
+      await prisma.user.delete({where:{
+        id: userId
+      }})
       return c.json('user deleted')
+    })
+
+    userRouter.put('/update/:id',authMiddleware,async(c)=>{
+      const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+      }).$extends(withAccelerate())
+      const userId = c.get('userId')
+      const id = parseInt(c.req.param('id'))
+      const body = await c.req.json()
+      if(id !== userId){
+        return c.json('Forbidden Access',403)
+      }
+      const {success} = updatedUserSchema.safeParse(body)
+      
+      if(!success){
+        return c.json('invaid user data')}
+      else{
+        const user = await prisma.user.update({
+          where:{id : userId },
+          data:body
+        })
+        console.log(user)
+        return c.json(user)
+      }
     })
